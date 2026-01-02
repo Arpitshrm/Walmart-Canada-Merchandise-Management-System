@@ -1,0 +1,43 @@
+"""
+Walmart Canada Inventory Module - Toronto Supercentre
+"""
+
+# Data Types: lists, dicts, tuples, sets
+INVENTORY = [
+    ("Milk", "Groceries", 2.99, 120, True),
+    ("iPhone 15", "Electronics", 1299.99, 25, True),
+    ("Jeans", "Clothing", 49.97, 80, True),
+    ("Bread", "Groceries", 3.47, 200, True),
+    ("TV 55\"", "Electronics", 599.99, 12, True),
+    ("T-Shirt", "Clothing", 19.97, 150, False)  # Discontinued
+]
+
+CATEGORIES = {"Groceries", "Electronics", "Clothing"}  # set
+LOW_STOCK_THRESHOLD = 20  # int constant
+
+def get_low_stock_items() -> list:
+    """Returns items with stock < threshold"""
+    low_stock = []
+    for item in INVENTORY:
+        name, cat, price, stock, active = item  # tuple unpacking
+        if stock < LOW_STOCK_THRESHOLD and active:
+            low_stock.append(item)
+    return low_stock
+
+def update_stock(item_name: str, quantity_sold: int) -> bool:
+    """Updates inventory stock - returns True if successful"""
+    for i, item in enumerate(INVENTORY):
+        if item[0] == item_name and item[4]:  # active item
+            INVENTORY[i] = list(item)  # convert tuple to list for mutation
+            INVENTORY[i][3] -= quantity_sold  # stock index
+            INVENTORY[i] = tuple(INVENTORY[i])  # back to tuple
+            return True
+    return False
+
+def get_category_total(category: str) -> float:
+    """Total value of inventory in category"""
+    total = 0.0
+    for item in INVENTORY:
+        if item[1] == category and item[4]:
+            total += item[2] * item[3]  # price * stock
+    return total
