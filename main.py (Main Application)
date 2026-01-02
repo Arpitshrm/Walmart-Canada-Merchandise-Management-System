@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""
+🚀 Walmart Canada Merchandise Management System - MAIN
+Toronto Supercentre (Yonge & Eglinton)
+"""
+
+import inventory
+import sales_analytics
+from tabulate import tabulate
+
+# Global variables (demonstrates scope)
+STORE_NAME = "Walmart Toronto Supercentre"
+DAILY_GOAL = 10000.00  # float literal
+
+def main():
+    print(f"🛒 {STORE_NAME} - Merchandise System")
+    print("=" * 50)
+    
+    # 1. DATA STRUCTURES & OPERATORS
+    print("\n📦 1. INVENTORY OVERVIEW")
+    headers = ["Item", "Category", "Price", "Stock", "Active"]
+    print(tabulate(inventory.INVENTORY, headers=headers, tablefmt="grid"))
+    
+    # 2. CONTROL FLOW: Low stock check (if/else, for, range)
+    print("\n⚠️  2. LOW STOCK ALERTS")
+    low_stock = inventory.get_low_stock_items()
+    if low_stock:
+        for item in low_stock:
+            print(f"🚨 LOW STOCK: {item[0]} ({item[3]} units)")
+    else:
+        print("✅ All stock levels good!")
+    
+    # 3. WHILE LOOP with break/continue
+    print("\n🔄 3. RESTOCK PROCESSING")
+    stock_to_process = list(range(1, 11))  # range()
+    i = 0
+    while i < len(stock_to_process):
+        if stock_to_process[i] % 3 == 0:  # Logical/Comparison operators
+            stock_to_process[i] *= 2  # Arithmetic
+            continue
+        if stock_to_process[i] > 15:
+            break
+        i += 1
+    print(f"Processed: {stock_to_process[:5]}...")  # List slicing
+    
+    # 4. Sample sales data (list of tuples)
+    today_sales = [
+        ("Milk", 45),
+        ("iPhone 15", 5),
+        ("Jeans", 22),
+        ("Bread", 60),
+        ("TV 55\"", 2),
+        ("Milk", 15),  # Repeat sales
+    ]
+    
+    # 5. FUNCTION CALLS & ANALYSIS
+    print("\n💰 4. SALES ANALYTICS")
+    revenue = sales_analytics.calculate_revenue(today_sales)
+    print(f"Total Revenue: ${revenue:.2f} CAD")
+    
+    # Goal comparison
+    goal_met = revenue >= DAILY_GOAL
+    print(f"Goal Met: {goal_met}")  # Boolean
+    
+    # Category performance
+    cat_total = inventory.get_category_total("Groceries")
+    print(f"Groceries Inventory Value: ${cat_total:.2f}")
+    
+    # 6. Advanced functions & lambda
+    discounts = sales_analytics.apply_discounts(
+        "Alice", "Bob", "Carol", 
+        discount_pct=0.15,
+        VIP_customer=0.25
+    )
+    print(f"\n🎁 Discounts: {discounts}")
+    
+    # 7. FULL REPORT
+    print("\n" + sales_analytics.generate_report(today_sales))
+    
+    # Simulate stock updates
+    inventory.update_stock("Milk", 30)
+    print("\n✅ Stock updated successfully!")
+
+if __name__ == "__main__":
+    main()
